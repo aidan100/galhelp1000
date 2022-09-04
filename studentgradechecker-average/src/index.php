@@ -10,8 +10,6 @@ $output = array(
 );
 
 $input_text = $_GET['input_text'];
-echo json_encode($urlencode($input_text));
-// $input_text = json_encode($input_text);
 
 $answer=getAverage($input_text);
 

@@ -9,7 +9,6 @@ function pretty_var_dump($var)
 }
 
 
-
 // api response formatting
 function response($data, $response_code, $response_desc)
 {
@@ -22,4 +21,7 @@ function response($data, $response_code, $response_desc)
   echo $json_response;
 }
 
-?>
+function _log($input)
+{
+  error_log(print_r($input, TRUE));
+}
