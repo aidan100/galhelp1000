@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap');
+
+
+/*
+Custom Navbar styling
+*/
+.navbar.custom-navbar {
+    background-color: #202020;
+
+}
+
+.navbar-item.custom-item {
+    color: whitesmoke;
+}
+
+.navbar-link.custom-item {
+    color: whitesmoke;
+}
+
+.button.is-primary.custom-button {
+    background-color: #ffd100;
+
+}
+
+.button.is-light.custom-button {
+    background-color: #d6d6d6;
+    color: black;
+}
+
+
+/* Index page styling */
+
+.custom-img {
+    border-radius: 15px;
+}
+
+.uk-card.uk-card-default {
+    height: fit-content;
+    height: auto;
+    width: auto;
+}
+
+
+
+
+/* display styling */
+.button.is-link.watchlist {
+    background-color: #ffd100;
+    color: black;
+}
+
+.button.is-link.submituser {
+    background-color: #ffd100;
+    color: black;
+}
+
+/* footer styling */
+.footer.custom-footer {
+    background-color: #202020;
+    ;
+}
+
+
+
+ .navbar-item{
+     margin-top: auto;
+     margin-bottom: auto;
+ }   
+
+.logo {
+    Font-Family: 'Dongle', sans-serif;
+    ;
+   
+
+}

@@ -2,8 +2,8 @@
 
 include_once('functions.php');
 
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,9 +16,8 @@ include_once('functions.php');
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
     <!-- Custom navbar styling -->
-    <link rel="stylesheet" href="styling.css">
-
-    <title>SignIn</title>
+    <link rel="stylesheet" type="text/css" href="css/styling.css">
+    <title>SignUp</title>
 </head>
 
 <body>
@@ -27,17 +26,30 @@ include_once('functions.php');
     ?>
 
 
-
     <div class="column is-one-third side-bar">
     </div>
     <div class="column is-one-third is-offset-one-third">
         <div class="label">
-            <h1 class="title">Sign In:</h1>
+            <h1 class="title">Sign-Up:</h1>
         </div>
-        <form id="form" name="signin" method="POST" action="http://127.0.0.1:85">
+        <form id="form" name="form" method="POST" action="http://127.0.0.1:85">
+            
+            <div class=" field">
+                <label class="label">First Name</label>
+                <div class="control">
+                    <input class="input" type="text" name="first_name" placeholder="E.g. John" required>
+                </div>
+            </div>
 
             <div class="field">
-                <label class="label" for="email">Email</label>
+                <label class="label">Last Name</label>
+                <div class="control">
+                    <input class="input" type="text" name="last_name" placeholder="E.g. Doe" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Email</label>
                 <div class="control has-icons-left has-icons-right">
                     <input class="input is-warning" type="email" placeholder="Email" name="email" required>
                     <span class="icon is-small is-left">
@@ -49,9 +61,21 @@ include_once('functions.php');
                 </div>
             </div>
 
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input is-success" type="password" placeholder="Password" required>
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                </div>
+            </div>
 
             <div class="field">
-                <label class="label" for="password">Password</label>
+                <label class="label">Confirm Password</label>
                 <div class="control has-icons-left has-icons-right">
                     <input class="input is-success" type="password" placeholder="Password" name="password" required>
                     <span class="icon is-small is-left">
@@ -63,20 +87,32 @@ include_once('functions.php');
                 </div>
             </div>
 
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" required>
+                        I agree to the <a href="#">terms and conditions</a>
+                    </label>
+                </div>
+            </div>
+
             <div class="field is-grouped">
                 <div class="control">
                     <input type="submit" value="submit" name="submituser" class="button is-link">
                 </div>
                 <div class="control">
-                    <button class="button is-link is-light">Clear</button>
+                    <button class="button is-link is-light">Cancel</button>
                 </div>
             </div>
         </form>
+    </div>
+    <div class="column is-one-third side-bar">
     </div>
 
     <?php
     include("footer.php");
     ?>
+
 </body>
 
 </html>

@@ -11,11 +11,11 @@ let max_module = '';
 let min_module = '';
 let sorted_modules = '';
 
-let totalURL = "http://localhost:90/"; //this function is not active, students have to implement it
+let totalURL = "http://localhost:91/"; //this function is not active, students have to implement it
 let maxminURL = "http://localhost:110/";
 let sortedModulesURL = "http://localhost:120/";
 let classificationURL = "http://localhost:100/";
-let averageURL = "http://localhost:70/";
+let averageURL = "http://localhost:84/";
 
 
 function displayTotal()
@@ -223,10 +223,12 @@ function getAverage()
               input_text_edited += lines[i];
             }
         }
+        
 
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
+                console.log(this.response);
                 var j = JSON.parse(this.response);
                 average = j.answer;
                 displayAverage();

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  signup:
+    container_name: signup
+    build: .
+    ports:
+     - "88:80"
+    image: sgc-signup:Dockerfile
+    networks:
+      - test
+    restart: always
+networks:
+    test:
+      external:
+        name: test
+
+        
+     

@@ -1,7 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Content-type: application/json");
-require('functions.inc.php');
+header("Content-type: application/json, charset=utf-8");
+include('functions.inc.php');
 
 $output = array(
 	"error" => false,
@@ -9,7 +9,9 @@ $output = array(
 	"answer" => 0
 );
 
-$input_text = $_REQUEST['input_text'];
+$input_text = $_GET['input_text'];
+echo json_encode($urlencode($input_text));
+// $input_text = json_encode($input_text);
 
 $answer=getAverage($input_text);
 

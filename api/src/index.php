@@ -2,36 +2,28 @@
 
 // return api results
 header('Content-Type: application/json; charset=utf-8');
+header("Access-Control-Allow-Origin: *");
+
 
 include_once('functions.php');
 include_once('config.php');
 
 
 $conn = new mysqli($host, $user, $pass, $mydatabase);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connected to MySQL server successfully!";
-}
 
 
-$email = $_POST['email'];
-$signin_password = $_POST['password'];
-
-var_dump($_POST);
-
-
+$email = $_GET['email'];
+$signin_password = $_GET['password'];
 
 
 $select_query = "SELECT user_password, user_id, user_email, user_status FROM user_login WHERE user_email = '{$email}'";
 
-echo $select_query;
+
 $result = $conn->query($select_query);
 
 
 if (isset($result)) {
     $result = $result->fetch_all(MYSQLI_ASSOC);
-    pretty_var_dump($result);
     if (isset($result[0])) {
         $result = $result[0];
 

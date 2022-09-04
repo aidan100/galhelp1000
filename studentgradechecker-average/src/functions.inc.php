@@ -1,7 +1,7 @@
 <?php
 function getAverage($input_text)
 {
-    $grade = '';
+    $average = '';
     $lines = explode("newline", $input_text);
     $module_marks=array();
     foreach ($lines as $line) {
@@ -10,7 +10,7 @@ function getAverage($input_text)
        array_push($module_marks,$module_marks_array);
     }
 
-    $total_marks = array_sum(array_column($module_marks, "marks"));
+   $total_marks = array_sum(array_column($module_marks, "marks"));
    $average = $total_marks/count($module_marks);
 
    return $average;
