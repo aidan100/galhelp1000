@@ -13,5 +13,6 @@ function getAverage($input_text)
    $total_marks = array_sum(array_column($module_marks, "marks"));
    $average = $total_marks/count($module_marks);
 
-   return $average;
+   // formatting to 2 dp
+   return number_format((float)$average, 2, '.', '');
 }

@@ -9,7 +9,7 @@ $output = array(
 	"answer" => 0
 );
 
-$input_text = $_REQUEST['input_text'];
+$input_text = $_GET['input_text'];
 
 $answer=getTotal($input_text);
 
