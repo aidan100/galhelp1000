@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>StudentGradeChecker</title>
+
+    <script type="text/javascript">
+
+        let input_text = '';
+        let total_marks = '';
+        let max_module = '';
+        let min_module = '';
+        let sorted_modules = '';
+
+        let totalURL = "http://localhost:84/";
+        let maxminURL = "http://localhost:84/";
+        let sortedModulesURL = "http://localhost:84/";
+        let classificationURL = "http://localhost:84/";
+        let averageURL = "http://localhost:84/";
+
+
+        function displayTotal() {
+            document.getElementById('output-text').value = '';
+            document.getElementById('output-text').value = 'Total marks = ' + total_marks;
+
+        }
+
+        function displayMaxMin() {
+            document.getElementById('output-text').value = '';
+            document.getElementById('output-text').value = 'Highest scoring module = ' + max_module
+                + '\nLowest scoring module = ' + min_module;
+
+        }
+
+        function displaySortedModules() {
+            document.getElementById('output-text').value = '';
+            document.getElementById('output-text').value = sorted_modules;
+
+        }
+
+        function displayClassification() {
+            document.getElementById('output-text').value = '';
+            document.getElementById('output-text').value = 'Classification = ' + classification;
+
+        }
+
+        function displayAverage() {
+            document.getElementById('output-text').value = '';
+            document.getElementById('output-text').value = 'Average = ' + average;
+
+        }
+
+        function clearText() {
+            document.getElementById('input-text').value = '';
+            document.getElementById('output-text').value = '';
+
+        }
+
+        function getMaxMin() {
+            input_text = document.getElementById('input-text').value
+            if (input_text == '')
+                return;
+            else {
+                input_text_edited = ''
+                lines = input_text.match(/[^\r\n]+/g);
+                for (let i = 0; i < lines.length; i++) {
+                    if (i != (lines.length - 1)) {
+                        input_text_edited += lines[ i ] + "newline";
+                    }
+                    else {
+                        input_text_edited += lines[ i ];
+                    }
+                }
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.response)
+                        var j = JSON.parse(this.response);
+                        max_min_returned = j.data.answer;
+                        max_min_returned_array = max_min_returned.split('newline');
+                        max_module = max_min_returned_array[ 0 ];
+                        min_module = max_min_returned_array[ -1 ];
+                        displayMaxMin();
+                    }
+                };
+
+                xhttp.open("GET", maxminURL + "?input_text=" + input_text_edited + "-maxmin");
+                xhttp.send();
+
+                return;
+            }
+        }
+
+        function getSortedModules() {
+            input_text = document.getElementById('input-text').value
+            if (input_text == '')
+                return;
+            else {
+                input_text_edited = ''
+                lines = input_text.match(/[^\r\n]+/g);
+                for (let i = 0; i < lines.length; i++) {
+                    if (i != (lines.length - 1)) {
+                        input_text_edited += lines[ i ] + "newline";
+                    }
+                    else {
+                        input_text_edited += lines[ i ];
+                    }
+                }
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.response)
+                        var j = JSON.parse(this.response);
+                        sorted_modules_returned = j.data.answer;
+                        sorted_modules_array = sorted_modules_returned.split('newline');
+                        sorted_modules = '';
+                        for (let i = 0; i < sorted_modules_array.length; i++) {
+                            sorted_modules += sorted_modules_array[ i ] + '\r\n';
+                        }
+                        displaySortedModules();
+                    }
+                };
+
+                xhttp.open("GET", sortedModulesURL + "?input_text=" + input_text_edited + "-sort");
+                xhttp.send();
+
+                return;
+            }
+
+        }
+
+        function getTotal() {
+            input_text = document.getElementById('input-text').value
+            if (input_text == '')
+                return;
+            else {
+                input_text_edited = ''
+                lines = input_text.match(/[^\r\n]+/g);
+                for (let i = 0; i < lines.length; i++) {
+                    if (i != (lines.length - 1)) {
+                        input_text_edited += lines[ i ] + "newline";
+                    }
+                    else {
+                        input_text_edited += lines[ i ];
+                    }
+                }
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var j = JSON.parse(this.response);
+                        total_marks = j.data.answer;
+                        displayTotal();
+                    }
+                };
+
+                xhttp.open("GET", totalURL + "?input_text=" + input_text_edited +"-total");
+                xhttp.send();
+
+                return;
+            }
+        }
+
+        function getClassification() {
+            input_text = document.getElementById('input-text').value
+            if (input_text == '')
+                return;
+            else {
+                input_text_edited = ''
+                lines = input_text.match(/[^\r\n]+/g);
+                for (let i = 0; i < lines.length; i++) {
+                    if (i != (lines.length - 1)) {
+                        input_text_edited += lines[ i ] + "newline";
+                    }
+                    else {
+                        input_text_edited += lines[ i ];
+                    }
+                }
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log(this.response)
+                        var j = JSON.parse(this.response);
+                        classification = j.data.answer;
+                        displayClassification();
+                    }
+                };
+
+                xhttp.open("GET", classificationURL + "?input_text=" + input_text_edited + "-classification");
+                xhttp.send();
+
+                return;
+            }
+        }
+
+        function getAverage() {
+            input_text = document.getElementById('input-text').value
+            if (input_text == '')
+                return;
+            else {
+                input_text_edited = ''
+                lines = input_text.match(/[^\r\n]+/g);
+                for (let i = 0; i < lines.length; i++) {
+                    if (i != (lines.length - 1)) {
+                        input_text_edited += lines[ i ] + "newline";
+                    }
+                    else {
+                        input_text_edited += lines[ i ];
+                    }
+                }
+
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var j = JSON.parse(this.response);
+                        console.log(j);
+                        average = j.data.answer;
+                        displayAverage();
+                    }
+                };
+
+                xhttp.open("GET", averageURL + "?input_text=" + input_text_edited +"-average");
+                xhttp.send();
+
+                return;
+            }
+        }
+
+
+    </script>
+
+    <style type="text/css">
+        body {
+            font-size: 150%;
+            font-family: monospace;
+        }
+
+        #logo {
+            font-family: Calibri, sans-serif;
+            font-weight: lighter;
+            color: #505050;
+            margin: 0.5em;
+        }
+
+        #sgc {
+            text-align: center;
+            margin-top: 1em;
+        }
+
+        .display-input {
+            font-size: 90%;
+            color: black;
+            background-color: white;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            width: 600px;
+
+        }
+
+        .display-output {
+            font-size: 90%;
+            color: white;
+            background-color: black;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            width: 600px;
+
+        }
+
+        .sgcbutton-active {
+            background-color: green;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+        .sgcbutton-inactive {
+            background-color: gray;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+        .sgcbutton-clear {
+            background-color: red;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div id="sgc">
+        <div id="logo">
+            Student Grade Checker App
+        </div>
+        <div>
+            <textarea class="display-input" id="input-text" rows="5" cols="35"
+                placeholder="Enter the module names and marks separated by comma [put each module in a new line]"
+                value="">Enter the module names and marks separated by comma [put each module in a new line]
+        </textarea>
+        </div>
+        <div>
+            <textarea class="display-output" id="output-text" rows="5" cols="35" readonly=1
+                placeholder="Results here..." value="">
+        </textarea>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getTotal();">Total Marks</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getMaxMin();">Highest & Lowest Scoring Modules</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getSortedModules();">Sort Modules</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getClassification();">Classify Grade</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getAverage();">Average Grade</button>
+        </div>
+        <div>
+            <button class="sgcbutton-clear" onclick="clearText();">Clear</button>
+        </div>
+
+    </div>
+</body>
+
+<script type="text/javascript">
+</script>
+
+</html>
