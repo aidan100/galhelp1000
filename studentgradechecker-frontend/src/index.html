@@ -5,6 +5,7 @@
     <title>StudentGradeChecker</title>
 
     <script type="text/javascript">
+        let proxyURL = "http://localhost:84/";
 
         let input_text = '';
         let total_marks = '';
@@ -12,90 +13,24 @@
         let min_module = '';
         let sorted_modules = '';
 
-        let totalURL = "http://localhost:84/"; //this function is not active, students have to implement it
-        let maxminURL = "http://localhost:84/";
-        let sortedModulesURL = "http://localhost:84/";
-        let classificationURL = "http://localhost:84/";
-        let averageURL = "http://localhost:84/";
+        function handleErrorDisplay(error = false) {
+            var errorContainer = document.getElementById('error-container');
+            errorContainer.innerText = '';
 
-
-        function displayTotal() {
-            document.getElementById('output-text').value = '';
-            document.getElementById('output-text').value = 'Total marks = ' + total_marks;
-
-        }
-
-        function displayMaxMin() {
-            document.getElementById('output-text').value = '';
-            document.getElementById('output-text').value = 'Highest scoring module = ' + max_module
-                + '\nLowest scoring module = ' + min_module;
-
-        }
-
-        function displaySortedModules() {
-            document.getElementById('output-text').value = '';
-            document.getElementById('output-text').value = sorted_modules;
-
-        }
-
-        function displayClassification() {
-            document.getElementById('output-text').value = '';
-            document.getElementById('output-text').value = 'Classification = ' + classification;
-
-        }
-
-        function displayAverage() {
-            document.getElementById('output-text').value = '';
-            document.getElementById('output-text').value = 'Average = ' + average;
-
-        }
-
-        function clearText() {
-            document.getElementById('input-text').value = '';
-            document.getElementById('output-text').value = '';
-
-        }
-
-        function getMaxMin() {
-            input_text = document.getElementById('input-text').value
-            if (input_text == '')
-                return;
-            else {
-                input_text_edited = ''
-                lines = input_text.match(/[^\r\n]+/g);
-                for (let i = 0; i < lines.length; i++) {
-                    if (i != (lines.length - 1)) {
-                        input_text_edited += lines[ i ] + "newline";
-                    }
-                    else {
-                        input_text_edited += lines[ i ];
-                    }
-                }
-
-                let xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var j = JSON.parse(this.response);
-                        max_min_returned = j.answer;
-                        max_min_returned_array = max_min_returned.split('newline');
-                        max_module = max_min_returned_array[ 0 ];
-                        min_module = max_min_returned_array[ 1 ];
-                        displayMaxMin();
-                    }
-                };
-
-                xhttp.open("GET", maxminURL + "?input_text=" + input_text_edited + "-maxmin");
-                xhttp.send();
-
-                return;
+            if (error) {
+                errorContainer.innerText = 'Error: ' + error;
+                errorContainer.style.display = 'block';
+            } else {
+                errorContainer.innerText = '';
+                errorContainer.style.display = 'none';
             }
-        }
-
-        function getSortedModules() {
+        };
+        function getFormattedInputText() {
             input_text = document.getElementById('input-text').value
-            if (input_text == '')
-                return;
-            else {
+            if (input_text == '') {
+                handleErrorDisplay('The input text is empty');
+                return '';
+            } else {
                 input_text_edited = ''
                 lines = input_text.match(/[^\r\n]+/g);
                 for (let i = 0; i < lines.length; i++) {
@@ -106,126 +41,85 @@
                         input_text_edited += lines[ i ];
                     }
                 }
+                return input_text_edited;
+            }
+        };
+        function displayResult(outputTextLabel, result, outputTextLabel2 = '', result2 = '') {
+            var outputText = document.getElementById('output-text');
 
-                let xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var j = JSON.parse(this.response);
-                        sorted_modules_returned = j.answer;
-                        sorted_modules_array = sorted_modules_returned.split('newline');
-                        sorted_modules = '';
-                        for (let i = 0; i < sorted_modules_array.length; i++) {
-                            sorted_modules += sorted_modules_array[ i ] + '\r\n';
+            outputText.innerText = outputTextLabel + ' = ' + result;
+            if (outputTextLabel2 != '' && result2 != '') {
+                outputText.innerText += ',\n' + outputTextLabel2 + ' = ' + result2;
+            }
+        };
+        function request(inputText, containerName, outputTextLabel, outputTextLabel2 = '') {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.response);
+                    console.log(response);
+
+                    var responseCode = response.response_code;
+
+                    if (responseCode === 200) {
+                        var answer = response.data.answer;
+                        if (answer) {
+                            handleErrorDisplay();
+                            displayResult(outputTextLabel, answer);
+                        } else {
+                            handleErrorDisplay(response.response_desc);
                         }
-                        displaySortedModules();
+                    } else {
+                        handleErrorDisplay(response.response_desc + '. Proxy: ok.');
                     }
-                };
-
-                xhttp.open("GET", sortedModulesURL + "?input_text=" + input_text_edited + "-sorted");
-                xhttp.send();
-
-                return;
-            }
-
+                } else if (this.readyState == 4 && this.status != 200) {
+                    handleErrorDisplay('There was an error with the proxy. Contact system admin');
+                }
+            };
+            xhttp.open("GET", proxyURL + "?input_text=" + inputText + "-" + containerName);
+            xhttp.send();
         }
 
         function getTotal() {
-            input_text = document.getElementById('input-text').value
-            if (input_text == '')
-                return;
-            else {
-                input_text_edited = ''
-                lines = input_text.match(/[^\r\n]+/g);
-                for (let i = 0; i < lines.length; i++) {
-                    if (i != (lines.length - 1)) {
-                        input_text_edited += lines[ i ] + "newline";
-                    }
-                    else {
-                        input_text_edited += lines[ i ];
-                    }
-                }
-
-                let xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var j = JSON.parse(this.response);
-                        total_marks = j.answer;
-                        displayTotal();
-                    }
-                };
-
-                xhttp.open("GET", totalURL + "?input_text=" + input_text_edited +"-total");
-                xhttp.send();
-
-                return;
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                request(input_text, 'total', 'Total marks');
             }
-        }
-
+        };
+        function getMaxMin() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                request(input_text, 'maxmin', 'Highest scoring module', 'Lowest scoring module');
+            }
+        };
+        function getSortedModules() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                request(input_text, 'sorted', 'Sorted modules');
+            }
+        };
         function getClassification() {
-            input_text = document.getElementById('input-text').value
-            if (input_text == '')
-                return;
-            else {
-                input_text_edited = ''
-                lines = input_text.match(/[^\r\n]+/g);
-                for (let i = 0; i < lines.length; i++) {
-                    if (i != (lines.length - 1)) {
-                        input_text_edited += lines[ i ] + "newline";
-                    }
-                    else {
-                        input_text_edited += lines[ i ];
-                    }
-                }
-
-                let xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var j = JSON.parse(this.response);
-                        classification = j.answer;
-                        displayClassification();
-                    }
-                };
-
-                xhttp.open("GET", classificationURL + "?input_text=" + input_text_edited + "-classify");
-                xhttp.send();
-
-                return;
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                request(input_text, 'classification', 'Classification');
             }
-        }
-
+        };
         function getAverage() {
-            input_text = document.getElementById('input-text').value
-            if (input_text == '')
-                return;
-            else {
-                input_text_edited = ''
-                lines = input_text.match(/[^\r\n]+/g);
-                for (let i = 0; i < lines.length; i++) {
-                    if (i != (lines.length - 1)) {
-                        input_text_edited += lines[ i ] + "newline";
-                    }
-                    else {
-                        input_text_edited += lines[ i ];
-                    }
-                }
-
-
-                let xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function () {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var j = JSON.parse(this.response);
-                        console.log(j);
-                        average = j.data.answer;
-                        displayAverage();
-                    }
-                };
-
-                xhttp.open("GET", averageURL + "?input_text=" + input_text_edited +"-average");
-                xhttp.send();
-
-                return;
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                request(input_text, 'average', 'Average');
             }
-        }
+        };
+        function clearText() {
+            handleErrorDisplay();
+            document.getElementById('input-text').value = '';
+            document.getElementById('output-text').value = '';
+        };
 
 
     </script>
@@ -246,6 +140,15 @@
         #sgc {
             text-align: center;
             margin-top: 1em;
+        }
+
+        .error-container {
+            margin: 1em auto;
+            font-size: 20px;
+            padding: 10px 5px;
+            border: 1px solid red;
+            display: none;
+            width: 600px;
         }
 
         .display-input {
@@ -326,9 +229,9 @@
         <div>
             <textarea class="display-input" id="input-text" rows="5" cols="35"
                 placeholder="Enter the module names and marks separated by comma [put each module in a new line]"
-                value="">Enter the module names and marks separated by comma [put each module in a new line]
-        </textarea>
+                value=""></textarea>
         </div>
+        <div id="error-container" class="error-container"></div>
         <div>
             <textarea class="display-output" id="output-text" rows="5" cols="35" readonly=1
                 placeholder="Results here..." value="">
