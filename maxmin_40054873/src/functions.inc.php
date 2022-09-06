@@ -18,7 +18,7 @@ function getMaxMin($input_text)
     // $minModule = array_filter($module_marks, function($x) use ($min){
     //     return $x['module'] === $min;
     // });
-    $minModule = $module_marks[-1]['module'] . ', ' . $module_marks[-1]['marks'];
+    $minModule = $module_marks[count($module_marks)-1]['module'] . ', ' . $module_marks[count($module_marks)-1]['marks'];
     $maxminModule = $maxModule . 'newline' . $minModule;
 
     return $maxminModule;

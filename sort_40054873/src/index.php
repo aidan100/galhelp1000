@@ -2,6 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-type: application/json");
 require('functions.inc.php');
+require('inputcheck.php');
 
 $output = array(
 	"error" => false,

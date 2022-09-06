@@ -17,8 +17,9 @@ if ($input_text === NULL) {
 	$output['string'] = "Could not read input text";
 	$output['answer'] = NULL;
 } else {
-	$answer = getTotal($input_text);
+	$answer = check($input_text);
 	if (isset($answer) && is_numeric($answer)) {
+		$answer  = 
 		$output['error'] = False;
 		$output['string'] = $input_text . "=" . $answer;
 		$output['answer'] = $answer;

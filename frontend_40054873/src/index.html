@@ -11,12 +11,15 @@
         let max_module = '';
         let min_module = '';
         let sorted_modules = '';
+        let percent_required = '';
 
         let totalURL = "http://localhost:84/";
         let maxminURL = "http://localhost:84/";
         let sortedModulesURL = "http://localhost:84/";
         let classificationURL = "http://localhost:84/";
         let averageURL = "http://localhost:84/";
+        let percentRequiredURL = "http://localhost:84/";
+
 
 
         function displayTotal() {
@@ -47,6 +50,12 @@
         function displayAverage() {
             document.getElementById('output-text').value = '';
             document.getElementById('output-text').value = 'Average = ' + average;
+
+        }
+
+        function displayPercentRequired() {
+            document.getElementById('output-text').value = '';
+            document.getElementById('output-text').value = 'Average percentage required in other modules to achieve a Commendation = ' + percent_required;
 
         }
 
@@ -230,6 +239,39 @@
             }
         }
 
+        
+        function getPercentRequired() {
+            input_text = document.getElementById('input-text').value
+            if (input_text == '')
+                return;
+            else {
+                input_text_edited = ''
+                lines = input_text.match(/[^\r\n]+/g);
+                for (let i = 0; i < lines.length; i++) {
+                    if (i != (lines.length - 1)) {
+                        input_text_edited += lines[ i ] + "newline";
+                    }
+                    else {
+                        input_text_edited += lines[ i ];
+                    }
+                }
+
+                let xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var j = JSON.parse(this.response);
+                        percent_required = j.data.answer;
+                        displayPercentRequired();
+                    }
+                };
+
+                xhttp.open("GET", percentRequiredURL + "?input_text=" + input_text_edited +"percent-required");
+                xhttp.send();
+
+                return;
+            }
+        }
+
 
     </script>
 
@@ -351,6 +393,9 @@
         </div>
         <div>
             <button class="sgcbutton-active" onclick="getAverage();">Average Grade</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getPercentRequired();">Percent Required</button>
         </div>
         <div>
             <button class="sgcbutton-clear" onclick="clearText();">Clear</button>
