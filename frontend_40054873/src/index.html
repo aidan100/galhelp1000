@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>StudentGradeChecker</title>
+
+    <script type="text/javascript">
+        let proxyURL = "http://localhost:84/";
+
+        function handleErrorDisplay(error = false) {
+            var errorContainer = document.getElementById('error-container');
+
+            if (error) {
+                errorContainer.innerText = 'Error: ' + error;
+                errorContainer.style.display = 'block';
+            } else {
+                errorContainer.innerText = '';
+                errorContainer.style.display = 'none';
+            }
+        };
+        function getFormattedInputText() {
+            let input_text = document.getElementById('input-text').value
+            if (input_text == '') {
+                handleErrorDisplay('The input text is empty');
+                return '';
+            } else {
+                input_text_edited = ''
+                lines = input_text.match(/[^\r\n]+/g);
+                for (let i = 0; i < lines.length; i++) {
+                    if (i != (lines.length - 1)) {
+                        input_text_edited += lines[ i ] + "newline";
+                    }
+                    else {
+                        input_text_edited += lines[ i ];
+                    }
+                }
+                return input_text_edited;
+            }
+        };
+        function displayResult(outputTextLabel, result, outputTextLabel2 = '', result2 = '') {
+            var outputText = document.getElementById('output-text');
+
+            if (Array.isArray(result)) {
+                outputText.innerText = outputTextLabel + ': ' + result.join(',\n');
+            } else {
+                outputText.innerText = outputTextLabel + ' = ' + result;
+                if (outputTextLabel2 != '' && result2 != '') {
+                    outputText.innerText += ',\n' + outputTextLabel2 + ' = ' + result2;
+                }
+            }
+        };
+        function request(inputText, containerName, displayFn) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.response);
+                    console.log(response);
+
+                    var responseCode = response.response_code;
+
+                    if (responseCode === 200) {
+                        var answer = response.data.answer;
+                        if (answer) {
+                            handleErrorDisplay();
+                            displayFn(answer);
+                        } else {
+                            handleErrorDisplay(response.data.string);
+                        }
+                    } else {
+                        handleErrorDisplay(response.data.string + '. Proxy: ok.');
+                    }
+                } else if (this.readyState == 4 && this.status != 200) {
+                    handleErrorDisplay('There was an error with the proxy. Contact system admin');
+                }
+            };
+            xhttp.open("GET", proxyURL + "?input_text=" + inputText + "-" + containerName);
+            xhttp.send();
+        }
+
+        function getTotal() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                function displayTotal(answer) {
+                    displayResult('Total Marks', answer);
+                }
+                request(input_text, 'total', displayTotal);
+            }
+        };
+        function getMaxMin() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                function displayMaxMin(answer) {
+                    answer.split('newline');
+                    displayResult('Highest scoring module', answer[ 0 ], 'Lowest scoring module', answer[ -1 ]);
+                }
+                request(input_text, 'maxmin', displayMaxMin);
+            }
+        };
+        function getSortedModules() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                function displaySortedModules(answer) {
+                    var sortedModules = answer.split('newline');
+                    displayResult('Sorted modules', sortedModules);
+                }
+                request(input_text, 'sorted', displaySortedModules);
+            }
+        };
+        function getClassification() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                function displayClassification(answer) {
+                    displayResult('Classification', answer);
+                }
+                request(input_text, 'classification', displayClassification);
+            }
+        };
+        function getAverage() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+            if (input_text) {
+                function displayAverage(answer) {
+                    displayResult('Average', answer)
+                }
+                request(input_text, 'average', displayAverage);
+            }
+        };
+        function clearText() {
+            handleErrorDisplay();
+            document.getElementById('input-text').value = '';
+            document.getElementById('output-text').value = '';
+        };
+
+
+        function getPercentRequired() {
+            handleErrorDisplay();
+            input_text = getFormattedInputText();
+
+            if (input_text) {
+                function displayPercentRequired(answer) {
+                    displayResult('Average percentage required in other modules to achieve a Commendation', answer);
+                }
+                request(input_text, 'percent-required', displayPercentRequired);
+            }
+        }
+
+
+    </script>
+
+    <style type="text/css">
+        body {
+            font-size: 150%;
+            font-family: monospace;
+        }
+
+        #logo {
+            font-family: Calibri, sans-serif;
+            font-weight: lighter;
+            color: #505050;
+            margin: 0.5em;
+        }
+
+        #sgc {
+            text-align: center;
+            margin-top: 1em;
+        }
+
+        .error-container {
+            margin: 1em auto;
+            font-size: 20px;
+            padding: 10px 5px;
+            border: 1px solid red;
+            display: none;
+            width: 600px;
+        }
+
+        .display-input {
+            font-size: 90%;
+            color: black;
+            background-color: white;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            width: 600px;
+
+        }
+
+        .display-output {
+            font-size: 90%;
+            color: white;
+            background-color: black;
+            padding: 0.2em;
+            margin: 0.2em;
+            font-family: monospace;
+            letter-spacing: 0.1em;
+            width: 600px;
+
+        }
+
+        .sgcbutton-active {
+            background-color: green;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+        .sgcbutton-inactive {
+            background-color: gray;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+        .sgcbutton-clear {
+            background-color: red;
+            color: white;
+            padding: 0px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            height: 40px;
+            width: 400px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    <div id="sgc">
+        <div id="logo">
+            Student Grade Checker App
+        </div>
+        <div>
+            <textarea class="display-input" id="input-text" rows="5" cols="35"
+                placeholder="Enter the module names and marks separated by comma [put each module in a new line]"
+                value=""></textarea>
+        </div>
+        <div id="error-container" class="error-container"></div>
+        <div>
+            <textarea class="display-output" id="output-text" rows="5" cols="35" readonly=1
+                placeholder="Results here..." value="">
+        </textarea>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getTotal();">Total Marks</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getMaxMin();">Highest & Lowest Scoring Modules</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getSortedModules();">Sort Modules</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getClassification();">Classify Grade</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getAverage();">Average Grade</button>
+        </div>
+        <div>
+            <button class="sgcbutton-active" onclick="getPercentRequired();">Percent Required</button>
+        </div>
+        <div>
+            <button class="sgcbutton-clear" onclick="clearText();">Clear</button>
+        </div>
+
+    </div>
+</body>
+
+<script type="text/javascript">
+</script>
+
+</html>

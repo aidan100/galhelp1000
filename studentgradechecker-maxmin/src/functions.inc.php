@@ -14,7 +14,11 @@ function getMaxMin($input_text)
     });
 
     $maxModule = $module_marks[0]['module'] . ', ' . $module_marks[0]['marks'];
-    $minModule = $module_marks[count($module_marks)-1]['module'] . ', ' . $module_marks[count($module_marks)-1]['marks'];
+    $min = min(array_column($module_marks, 'marks'));
+    $minModule = array_filter($module_marks, function($x) use ($min){
+        return $x['module'] === $min;
+    });
+    // $minModule = $module_marks[count($module_marks)-1]['module'] . ', ' . $module_marks[count($module_marks)-1]['marks'];
     $maxminModule = $maxModule . 'newline' . $minModule;
 
     return $maxminModule;
