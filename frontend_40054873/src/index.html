@@ -77,7 +77,7 @@
                     handleErrorDisplay('There was an error with the proxy. Contact system admin');
                 }
             };
-            xhttp.open("GET", proxyURL + "?input_text=" + inputText + "|" + containerName);
+            xhttp.open("GET", proxyURL + "?input_text=" + inputText + "-" + containerName);
             xhttp.send();
         }
 

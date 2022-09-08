@@ -38,7 +38,7 @@ curl_close($curl);
 
 $response_description = "";
 
-if ($response_code === 200 && $response['error'] === False) {
+if ($response_code === 200 && $response['error'] === false) {
     $response_description = "URL active for container";
     response($response, $response_code, $response_description);
 } elseif ($response_code === 200 && $response['error'] === true) {
@@ -46,10 +46,10 @@ if ($response_code === 200 && $response['error'] === False) {
     response($response, $response_code, $response_description);
 } else {
     $response_description = "URL inactive for container";
-    $response($response, $response_code, $response_description);
+    response($response, $response_code, $response_description);
 }
 
 
 
-    
+
 ?>
