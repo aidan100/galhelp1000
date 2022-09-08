@@ -7,7 +7,7 @@ require('inputcheck.php');
 $output = array(
 	"error" => false,
   "string" => "",
-	"answer" => 0
+	"answer" => 200
 );
 
 $input_text = $_GET['input_text'];

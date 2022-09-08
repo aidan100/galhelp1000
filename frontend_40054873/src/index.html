@@ -28,10 +28,10 @@
                 lines = input_text.match(/[^\r\n]+/g);
                 for (let i = 0; i < lines.length; i++) {
                     if (i != (lines.length - 1)) {
-                        input_text_edited += lines[ i ] + "newline";
+                        input_text_edited += lines[i] + "newline";
                     }
                     else {
-                        input_text_edited += lines[ i ];
+                        input_text_edited += lines[i];
                     }
                 }
                 return input_text_edited;
@@ -68,12 +68,16 @@
                         }
                     } else {
                         handleErrorDisplay(response.data.string + '. Proxy: ok.');
+                        var response = JSON.parse(this.response);
+                        console.log(response);
                     }
                 } else if (this.readyState == 4 && this.status != 200) {
+                    var response = JSON.parse(this.response);
+                    console.log(response);
                     handleErrorDisplay('There was an error with the proxy. Contact system admin');
                 }
             };
-            xhttp.open("GET", proxyURL + "?input_text=" + inputText + "-" + containerName);
+            xhttp.open("GET", proxyURL + "?input_text=" + inputText + "|" + containerName);
             xhttp.send();
         }
 
@@ -93,7 +97,7 @@
             if (input_text) {
                 function displayMaxMin(answer) {
                     answer.split('newline');
-                    displayResult('Highest scoring module', answer[ 0 ], 'Lowest scoring module', answer[ -1 ]);
+                    displayResult('Highest scoring module', answer[0], 'Lowest scoring module', answer[-1]);
                 }
                 request(input_text, 'maxmin', displayMaxMin);
             }
@@ -243,7 +247,6 @@
             height: 40px;
             width: 400px;
         }
-
     </style>
 
 </head>

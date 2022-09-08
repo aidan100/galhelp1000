@@ -45,7 +45,7 @@ final class Test extends TestCase{
     public function testwithinvalidnumber(): void {
 
     $t="Programming,65newlineWeb Dev,bb";
-    $expect="number must be between 0-100";
+    $expect="the grade must be numeric";
     
     $answer=check($t);
     $this->assertEquals(

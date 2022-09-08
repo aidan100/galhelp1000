@@ -6,17 +6,13 @@ header("Access-Control-Allow-Origin: *");
 header("Content-type: application/json");
 
 $url = $_SERVER['HTTP_REFERER'];
-echo $url;
 
-$port = $_SERVER['SERVER_PORT'];
-echo $port;
-
-$conn = new mysqli($host, $user, $pass, $mydatabase);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-} else {
-    echo "Connected to MySQL server successfully!";
-}
+// $conn = new mysqli($host, $user, $pass, $mydatabase);
+// if ($conn->connect_error) {
+//     die("Connection failed: " . $conn->connect_error);
+// } else {
+//     echo "Connected to MySQL server successfully!";
+// }
 
 
 $email = $_POST['email'];
@@ -28,7 +24,7 @@ $post_request = [
     'email' => $_POST['email'],
     'password' => $_POST['password']
 ];
-echo $poststring;
+// echo $poststring;
 
 $prev_url = $_SERVER['HTTP_REFERER'];
 
@@ -59,3 +55,32 @@ _log($curl_error);
 _log('Curl Response :' . $curl_response);
 _log('Response : ' . $response);
 curl_close($curl);
+
+if (isset($response['response_code']) && isset($response['data']['session']) && $response['response_code'] === 200 && $response['data']['session'] === "1" && isset($response['data']['user_id'])) {
+    $session = "1";
+    $_SESSION['loggedIn'] = $session;
+    $_SESSION['userId'] = $response['data']['user_id'];
+?>
+    <script type="text/javascript">
+        window.location.assign("http://localhost:80");
+    </script>
+<?php
+    // exit();
+} elseif (isset($response['response_code']) && $response['response_code'] === 200 && isset($response['data']['session'])  && $response['data']['session'] === "2" && isset($_SESSION['loggedIn']) && isset($response['data']['session'])) {
+    $session = "2";
+    $_SESSION['loggedIn'] = $session;
+    $_SESSION['userId'] = $response['data']['user_id'];
+?>
+    <script type="text/javascript">
+        window.location.assign("http://localhost:80");
+    </script>
+<?php
+
+    // exit();
+} else {
+    $session = false;
+    $_SESSION['loggedIn'] = $session;
+    $_SESSION['userId'] = $session;
+    // header("Location: signin.php");
+    // exit();
+}
