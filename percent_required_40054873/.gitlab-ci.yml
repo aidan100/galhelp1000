@@ -1,0 +1,5 @@
+image: php:7.3
+
+test:app:
+   script:
+    - php ./vendor/bin/phpunit ./src/test.php

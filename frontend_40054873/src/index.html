@@ -5,7 +5,45 @@
     <title>StudentGradeChecker</title>
 
     <script type="text/javascript">
-        let proxyURL = "http://localhost:84/";
+        let proxyURL1 = "http://localhost:84/";
+        let proxyURL2 = "http://localhost:110/";
+        let proxyURL3 = "http://localhost:111/";
+
+        // checks status of proxy
+        function proxyCheck(url) {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var response = JSON.parse(this.response);
+                    console.log(response);
+
+                    var responseCode = response.response_code;
+
+                    if (responseCode === 200) {
+                        return url
+                    }
+                }
+            };
+            // true makes the request async
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }
+
+        // returns live proxy container url
+        function setProxyURL() {
+            if (proxyCheck(proxyURL1)) {
+                return proxyURL1
+            } else if (proxyCheck(proxyURL2)) {
+                return proxyURL2
+            } else if (proxyCheck(proxyURL3)) {
+                return proxyURL3
+            }
+        }
+
+        // sets proxy url to live container proxy
+        const proxyURL = setProxyURL()
+        console.log(proxyURL)
+
 
         function handleErrorDisplay(error = false) {
             var errorContainer = document.getElementById('error-container');
@@ -28,10 +66,10 @@
                 lines = input_text.match(/[^\r\n]+/g);
                 for (let i = 0; i < lines.length; i++) {
                     if (i != (lines.length - 1)) {
-                        input_text_edited += lines[ i ] + "newline";
+                        input_text_edited += lines[i] + "newline";
                     }
                     else {
-                        input_text_edited += lines[ i ];
+                        input_text_edited += lines[i];
                     }
                 }
                 return input_text_edited;
@@ -76,6 +114,9 @@
                     var response = JSON.parse(this.response);
                     console.log(response);
                     handleErrorDisplay('There was an error with the proxy. Contact system admin');
+                } else {
+                    console.log(response);
+                    handleErrorDisplay('Proxy down. Contact system admin');
                 }
             };
             xhttp.open("GET", proxyURL + "?input_text=" + inputText + "-" + containerName);
@@ -250,7 +291,6 @@
             height: 40px;
             width: 400px;
         }
-
     </style>
 
 </head>
