@@ -28,10 +28,10 @@
                 lines = input_text.match(/[^\r\n]+/g);
                 for (let i = 0; i < lines.length; i++) {
                     if (i != (lines.length - 1)) {
-                        input_text_edited += lines[i] + "newline";
+                        input_text_edited += lines[ i ] + "newline";
                     }
                     else {
-                        input_text_edited += lines[i];
+                        input_text_edited += lines[ i ];
                     }
                 }
                 return input_text_edited;
@@ -41,12 +41,13 @@
             var outputText = document.getElementById('output-text');
 
             if (Array.isArray(result)) {
-                outputText.innerText = outputTextLabel + ': ' + result.join(',\n');
+                outputText.innerHTML = outputTextLabel + ': \n' + result.join('\n');
             } else {
-                outputText.innerText = outputTextLabel + ' = ' + result;
+                var answerText = outputTextLabel + ' = ' + result;
                 if (outputTextLabel2 != '' && result2 != '') {
-                    outputText.innerText += ',\n' + outputTextLabel2 + ' = ' + result2;
+                    answerText += ',\n' + outputTextLabel2 + ' = ' + result2;
                 }
+                outputText.innerHTML = answerText;
             }
         };
         function request(inputText, containerName, displayFn) {
@@ -96,8 +97,10 @@
             input_text = getFormattedInputText();
             if (input_text) {
                 function displayMaxMin(answer) {
-                    answer.split('newline');
-                    displayResult('Highest scoring module', answer[0], 'Lowest scoring module', answer[-1]);
+                    var answerArray = answer.split('newline');
+                    var max = answerArray[0][0];
+                    var min = answerArray[1][0];
+                    displayResult('Highest scoring module', max, 'Lowest scoring module', min);
                 }
                 request(input_text, 'maxmin', displayMaxMin);
             }
@@ -110,7 +113,7 @@
                     var sortedModules = answer.split('newline');
                     displayResult('Sorted modules', sortedModules);
                 }
-                request(input_text, 'sorted', displaySortedModules);
+                request(input_text, 'sort', displaySortedModules);
             }
         };
         function getClassification() {
@@ -148,7 +151,7 @@
                 function displayPercentRequired(answer) {
                     displayResult('Average percentage required in other modules to achieve a Commendation', answer);
                 }
-                request(input_text, 'percent-required', displayPercentRequired);
+                request(input_text, 'percentRequired', displayPercentRequired);
             }
         }
 
@@ -247,6 +250,7 @@
             height: 40px;
             width: 400px;
         }
+
     </style>
 
 </head>
