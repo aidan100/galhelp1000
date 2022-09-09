@@ -3,201 +3,7 @@
 
 <head>
     <title>StudentGradeChecker</title>
-
-    <script type="text/javascript">
-        let proxyURL1 = "http://localhost:84/";
-        let proxyURL2 = "http://localhost:110/";
-        let proxyURL3 = "http://localhost:111/";
-
-        // checks status of proxy
-        function proxyCheck(url) {
-            let xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var response = JSON.parse(this.response);
-                    console.log(response);
-
-                    var responseCode = response.response_code;
-
-                    if (responseCode === 200) {
-                        return url
-                    }
-                }
-            };
-            // true makes the request async
-            xhttp.open("GET", url, true);
-            xhttp.send();
-        }
-
-        // returns live proxy container url
-        function setProxyURL() {
-            if (proxyCheck(proxyURL1)) {
-                return proxyURL1
-            } else if (proxyCheck(proxyURL2)) {
-                return proxyURL2
-            } else if (proxyCheck(proxyURL3)) {
-                return proxyURL3
-            }
-        }
-
-        // sets proxy url to live container proxy
-        const proxyURL = setProxyURL()
-        console.log(proxyURL)
-
-
-        function handleErrorDisplay(error = false) {
-            var errorContainer = document.getElementById('error-container');
-
-            if (error) {
-                errorContainer.innerText = 'Error: ' + error;
-                errorContainer.style.display = 'block';
-            } else {
-                errorContainer.innerText = '';
-                errorContainer.style.display = 'none';
-            }
-        };
-        function getFormattedInputText() {
-            let input_text = document.getElementById('input-text').value
-            if (input_text == '') {
-                handleErrorDisplay('The input text is empty');
-                return '';
-            } else {
-                input_text_edited = ''
-                lines = input_text.match(/[^\r\n]+/g);
-                for (let i = 0; i < lines.length; i++) {
-                    if (i != (lines.length - 1)) {
-                        input_text_edited += lines[i] + "newline";
-                    }
-                    else {
-                        input_text_edited += lines[i];
-                    }
-                }
-                return input_text_edited;
-            }
-        };
-        function displayResult(outputTextLabel, result, outputTextLabel2 = '', result2 = '') {
-            var outputText = document.getElementById('output-text');
-
-            if (Array.isArray(result)) {
-                outputText.innerHTML = outputTextLabel + ': \n' + result.join('\n');
-            } else {
-                var answerText = outputTextLabel + ' = ' + result;
-                if (outputTextLabel2 != '' && result2 != '') {
-                    answerText += ',\n' + outputTextLabel2 + ' = ' + result2;
-                }
-                outputText.innerHTML = answerText;
-            }
-        };
-        function request(inputText, containerName, displayFn) {
-            let xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    var response = JSON.parse(this.response);
-                    console.log(response);
-
-                    var responseCode = response.response_code;
-
-                    if (responseCode === 200) {
-                        var answer = response.data.answer;
-                        if (answer) {
-                            handleErrorDisplay();
-                            displayFn(answer);
-                        } else {
-                            handleErrorDisplay(response.data.string);
-                        }
-                    } else {
-                        handleErrorDisplay(response.data.string + '. Proxy: ok.');
-                        var response = JSON.parse(this.response);
-                        console.log(response);
-                    }
-                } else if (this.readyState == 4 && this.status != 200) {
-                    var response = JSON.parse(this.response);
-                    console.log(response);
-                    handleErrorDisplay('There was an error with the proxy. Contact system admin');
-                } else {
-                    console.log(response);
-                    handleErrorDisplay('Proxy down. Contact system admin');
-                }
-            };
-            xhttp.open("GET", proxyURL + "?input_text=" + inputText + "-" + containerName);
-            xhttp.send();
-        }
-
-        function getTotal() {
-            handleErrorDisplay();
-            input_text = getFormattedInputText();
-            if (input_text) {
-                function displayTotal(answer) {
-                    displayResult('Total Marks', answer);
-                }
-                request(input_text, 'total', displayTotal);
-            }
-        };
-        function getMaxMin() {
-            handleErrorDisplay();
-            input_text = getFormattedInputText();
-            if (input_text) {
-                function displayMaxMin(answer) {
-                    var answerArray = answer.split('newline');
-                    var max = answerArray[0][0];
-                    var min = answerArray[1][0];
-                    displayResult('Highest scoring module', max, 'Lowest scoring module', min);
-                }
-                request(input_text, 'maxmin', displayMaxMin);
-            }
-        };
-        function getSortedModules() {
-            handleErrorDisplay();
-            input_text = getFormattedInputText();
-            if (input_text) {
-                function displaySortedModules(answer) {
-                    var sortedModules = answer.split('newline');
-                    displayResult('Sorted modules', sortedModules);
-                }
-                request(input_text, 'sort', displaySortedModules);
-            }
-        };
-        function getClassification() {
-            handleErrorDisplay();
-            input_text = getFormattedInputText();
-            if (input_text) {
-                function displayClassification(answer) {
-                    displayResult('Classification', answer);
-                }
-                request(input_text, 'classification', displayClassification);
-            }
-        };
-        function getAverage() {
-            handleErrorDisplay();
-            input_text = getFormattedInputText();
-            if (input_text) {
-                function displayAverage(answer) {
-                    displayResult('Average', answer)
-                }
-                request(input_text, 'average', displayAverage);
-            }
-        };
-        function clearText() {
-            handleErrorDisplay();
-            document.getElementById('input-text').value = '';
-            document.getElementById('output-text').value = '';
-        };
-
-
-        function getPercentRequired() {
-            handleErrorDisplay();
-            input_text = getFormattedInputText();
-
-            if (input_text) {
-                function displayPercentRequired(answer) {
-                    displayResult('Average percentage required in other modules to achieve a Commendation', answer);
-                }
-                request(input_text, 'percentRequired', displayPercentRequired);
-            }
-        }
-
-
-    </script>
+    <script src="main.js" defer></script>
 
     <style type="text/css">
         body {
@@ -291,6 +97,16 @@
             height: 40px;
             width: 400px;
         }
+
+        .proxy-status-indicator {
+            margin-left: 10px;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            background-color: red;
+        }
+
     </style>
 
 </head>
@@ -333,10 +149,11 @@
             <button class="sgcbutton-clear" onclick="clearText();">Clear</button>
         </div>
 
+        <div>
+            <p><b>Proxy Status Updates</b></p>
+            <div id="proxy-status-container"></div>
+        </div>
     </div>
 </body>
-
-<script type="text/javascript">
-</script>
 
 </html>

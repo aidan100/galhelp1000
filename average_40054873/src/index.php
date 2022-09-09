@@ -18,7 +18,7 @@ if ($input_text === NULL) {
 	$output['answer'] = NULL;
 } else {
 	$answer = getAverage($input_text);
-	if (isset($answer) && is_numeric($answer)) {
+	if (isset($answer)) {
 		$output['error'] = false;
 		$output['string'] = $input_text . "=" . $answer;
 		$output['answer'] = $answer;
