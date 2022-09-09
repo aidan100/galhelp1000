@@ -239,7 +239,5 @@ function getPercentRequired() {
 
 };
 
-// when the page loads, set the status of the proxies
-document.on('ready', function () {
-  setProxyStatus();
-});
+// set the status of the proxies
+setProxyStatus();
