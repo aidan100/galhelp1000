@@ -47,10 +47,6 @@ function setProxyStatus() {
     };
 
     xhttp.open("GET", url);
-    // if the request could not be made, set the proxy status to not running
-    xhttp.onerror = function () {
-      buildProxyStatusIndicator(proxyNumber, false);
-    };
     xhttp.send();
   });
 }
@@ -239,5 +235,5 @@ function getPercentRequired() {
 
 };
 
-// set the status of the proxies
-setProxyStatus();
+// when the page loads, set the status of the proxies
+  setProxyStatus();
